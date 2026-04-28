@@ -727,6 +727,14 @@ def deserialize_keras_object(
             f"the class is missing a `from_config()` method. "
             f"Full object config: {config}"
         )
+    if class_name != "Sequential" and not isinstance(inner_config, dict):
+        raise TypeError(
+            "Unable to reconstruct an instance of "
+            f"'{class_name}' because its `config` entry must be a dictionary "
+            "of constructor arguments. "
+            f"Received type: {type(inner_config).__name__}. "
+            f"Received value: {inner_config!r}"
+        )
 
     # Instantiate the class from its config inside a custom object scope
     # so that we can catch any custom objects that the config refers to.

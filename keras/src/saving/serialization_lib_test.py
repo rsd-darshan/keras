@@ -577,6 +577,18 @@ class SerializationLibTest(testing.TestCase):
         restored = serialization_lib.deserialize_keras_object(config)
         self.assertIsInstance(restored, MyDense)
 
+    def test_invalid_class_config_type_raises_clear_error(self):
+        serialized = {
+            "class_name": "Dense",
+            "module": "keras.layers",
+            "config": [1, 2, 3],
+        }
+        with self.assertRaisesRegex(
+            TypeError,
+            "its `config` entry must be a dictionary",
+        ):
+            deserialize_keras_object(serialized)
+
 
 @keras.saving.register_keras_serializable()
 class MyDense(keras.layers.Layer):
